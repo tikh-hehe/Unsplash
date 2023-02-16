@@ -9,7 +9,15 @@ import UIKit
 import Nuke
 import NukeExtensions
 
+protocol FeedVCProtocol: AnyObject {
+    func updateCollection()
+}
+
 final class FeedVC: UIViewController {
+    
+    private lazy var presenter: FeedPresenterProtocol = FeedPresenter(view: self)
+
+    // MARK: - Views
     
     private lazy var collectionView: UICollectionView = {
         let frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
@@ -18,8 +26,7 @@ final class FeedVC: UIViewController {
         collectionView.delegate = self
         collectionView.alwaysBounceVertical = true
         collectionView.backgroundColor = .systemBackground
-        collectionView.register(FeedCell.self,
-                                forCellWithReuseIdentifier: FeedCell.reuseID)
+        collectionView.register(FeedCell.self, forCellWithReuseIdentifier: FeedCell.reuseID)
         return collectionView
     }()
     
@@ -32,40 +39,39 @@ final class FeedVC: UIViewController {
         layout.minimumInteritemSpacing = spacing
         return layout
     }()
-    
-    var photos: [UnsplashPhoto] = []
         
+    // MARK: - Lifecycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         collectionView.collectionViewLayout = flowLayout
         view.addSubview(collectionView)
-        getPhotos()
+        presenter.getPhotos()
     }
-    
-    func getPhotos() {
-        NetworkManager.shared.getPhotos { [weak self] photos in
-            guard let self = self else { return }
-            DispatchQueue.main.async {
-                self.photos = photos
-                self.collectionView.reloadData()
-            }
+}
+
+// MARK: - FeedVCProtocol
+
+extension FeedVC: FeedVCProtocol {
+    func updateCollection() {
+        DispatchQueue.main.async {
+            self.collectionView.reloadData()
         }
     }
 }
 
+// MARK: - CollectionView Delegate & DataSource
+
 extension FeedVC: UICollectionViewDelegate, UICollectionViewDataSource {
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 1
-    }
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return photos.count
+        return presenter.photos.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FeedCell.reuseID,
                                                       for: indexPath) as! FeedCell
-        NukeExtensions.loadImage(with: photos[indexPath.row].urls.small, into: cell.imageView)
+        NukeExtensions.loadImage(with: presenter.photos[indexPath.row].urls.small, into: cell.imageView)
         return cell
     }
     
@@ -73,6 +79,8 @@ extension FeedVC: UICollectionViewDelegate, UICollectionViewDataSource {
         print("Collection view at row \(collectionView.tag) selected index path \(indexPath)")
     }
 }
+
+// MARK: - FlowLayout
 
 extension FeedVC: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView,

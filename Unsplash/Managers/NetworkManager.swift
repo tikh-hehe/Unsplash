@@ -10,7 +10,6 @@ import Foundation
 class NetworkManager {
     static let shared = NetworkManager()
     private let baseURL = "https://api.unsplash.com/"
-    var photos: [UnsplashPhoto] = []
     
     func getPhotos(completion: @escaping ([UnsplashPhoto]) -> Void) {
         let endpoint = baseURL + "photos?per_page=30&client_id=KaCOFgOjrAfE77fcdCaSVmInB3BeMI5WQmm6o2IOvkE"
@@ -18,8 +17,8 @@ class NetworkManager {
         
         URLSession.shared.dataTask(with: url) { data, response, error in
             if let data {
-                self.photos = try! JSONDecoder().decode([UnsplashPhoto].self, from: data)
-                completion(self.photos.self)
+                let photos = try! JSONDecoder().decode([UnsplashPhoto].self, from: data)
+                completion(photos)
             }
         }.resume()
     }
