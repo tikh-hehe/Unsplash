@@ -11,6 +11,7 @@ import NukeExtensions
 
 protocol FeedVCProtocol: AnyObject {
     func updateCollection()
+    func showAlert()
 }
 
 final class FeedVC: UIViewController {
@@ -58,6 +59,14 @@ extension FeedVC: FeedVCProtocol {
             self.collectionView.reloadData()
         }
     }
+    
+    func showAlert() {
+        DispatchQueue.main.async {
+            let ac = UIAlertController(title: "Something went wrong", message: "Please, try again", preferredStyle: .alert)
+            ac.addAction(UIAlertAction(title: "OK", style: .cancel))
+            self.present(ac, animated: true)
+        }
+    }
 }
 
 // MARK: - CollectionView Delegate & DataSource
@@ -75,8 +84,10 @@ extension FeedVC: UICollectionViewDelegate, UICollectionViewDataSource {
         return cell
     }
     
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print("Collection view at row \(collectionView.tag) selected index path \(indexPath)")
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        if indexPath.row == presenter.photos.count - 10 {
+            presenter.updatePage()
+        }
     }
 }
 
