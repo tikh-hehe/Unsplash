@@ -6,25 +6,36 @@
 //
 
 import UIKit
+import SnapKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
-
+    
     var window: UIWindow?
-
-
+    
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         let window = UIWindow(windowScene: windowScene)
 
-        let vc = FeedVC()
-        let vc2 = FavoritesVC()
-        let tabbar = UITabBarController()
-        let navVC = UINavigationController(rootViewController: vc)
-        let navVCTwo = UINavigationController(rootViewController: vc2)
-        tabbar.setViewControllers([navVC, navVCTwo], animated: true)
+        let feedVC = FeedVC()
+        let feedNavController = UINavigationController(rootViewController: feedVC)
+        feedNavController.title = "Home"
         
-        window.rootViewController = tabbar
+        let favoritesVC = FavoritesVC()
+        let favoritesNavController = UINavigationController(rootViewController: favoritesVC)
+        favoritesNavController.title = "Favorites"
+        
+        let tabbar = UnsplashTabBarController()
+        tabbar.setViewControllers([feedNavController, favoritesNavController], animated: true)
+        
+        guard let items = tabbar.tabBar.items else { return }
+        let images = ["house", "star"]
+        for i in 0...1 {
+            items[i].image = UIImage(systemName: images[i])
+        }
+        tabbar.tabBar.tintColor = .black
+        
         self.window = window
+        window.rootViewController = tabbar
         window.makeKeyAndVisible()
     }
 
@@ -37,5 +48,4 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func sceneWillEnterForeground(_ scene: UIScene) {}
 
     func sceneDidEnterBackground(_ scene: UIScene) {}
-
 }
