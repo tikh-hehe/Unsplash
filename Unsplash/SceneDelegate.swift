@@ -32,7 +32,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         for i in 0...1 {
             items[i].image = UIImage(systemName: images[i])
         }
-        tabbar.tabBar.tintColor = .black
+        tabbar.tabBar.tintColor = .label
         
         self.window = window
         window.rootViewController = tabbar

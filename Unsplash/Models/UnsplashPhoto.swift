@@ -8,6 +8,7 @@
 import Foundation
 
 struct UnsplashPhoto: Decodable {
+    let blur_hash: String?
     let urls: PhotoUrls
 }
 

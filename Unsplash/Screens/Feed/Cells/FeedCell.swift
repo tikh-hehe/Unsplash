@@ -15,8 +15,6 @@ class FeedCell: UICollectionViewCell {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
-//        imageView.backgroundColor = .systemRed
-//        imageView.image = UIImage(systemName: "house")
         return imageView
     }()
     
