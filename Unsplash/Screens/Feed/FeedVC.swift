@@ -49,6 +49,9 @@ final class FeedVC: UIViewController {
     }()
     
     private let searchController = UISearchController()
+    
+    // MARK: - Properties
+    
     private var numberOfPages = 0
         
     // MARK: - Lifecycle
@@ -56,7 +59,7 @@ final class FeedVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
-        title = "Unsplash"
+        title = "Search"
         searchController.searchBar.placeholder = "Tap-tap here"
         searchController.searchBar.delegate = self
         searchController.searchBar.spellCheckingType = .no
@@ -114,11 +117,10 @@ extension FeedVC: UICollectionViewDelegate, UICollectionViewDataSource {
         return cell
     }
     
-//    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-//        print("Chachacha")
-//        let infoVC = InfoVC()
-//        navigationController?.pushViewController(infoVC, animated: true)
-//    }
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let infoVC = InfoVC(photo: presenter.photos[indexPath.row])
+        navigationController?.pushViewController(infoVC, animated: true)
+    }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         let footer = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "footer", for: indexPath)
@@ -147,17 +149,7 @@ extension FeedVC: UICollectionViewDelegate, UICollectionViewDataSource {
     }
     
     // MARK: - ScrollView
-    
-    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-        let actualPosition = scrollView.panGestureRecognizer.translation(in: scrollView.superview)
-        if (!(actualPosition.y > 0) && searchController.isActive) || ((actualPosition.y > 0) && searchController.isActive) {
-            navigationController?.hidesBarsOnSwipe = false
-        }
-        if !(actualPosition.y > 0) {
-            navigationController?.hidesBarsOnSwipe = true
-        }
-    }
-    
+        
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         let offsetY = scrollView.contentOffset.y
         let contentHeight = scrollView.contentSize.height
