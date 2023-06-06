@@ -63,6 +63,7 @@ final class FeedVC: UIViewController {
         searchController.searchBar.placeholder = "Tap-tap here"
         searchController.searchBar.delegate = self
         searchController.searchBar.spellCheckingType = .no
+        searchController.searchBar.searchTextField.keyboardType = .asciiCapable
         navigationItem.searchController = searchController
         navigationItem.hidesSearchBarWhenScrolling = false
         navigationItem.searchController?.automaticallyShowsCancelButton = true
@@ -192,7 +193,6 @@ extension FeedVC: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         let actualPosition = collectionView.panGestureRecognizer.translation(in: collectionView.superview)
         guard let text = searchController.searchBar.text else { return }
-       // presenter.resetPagesAndPhotos()
 
         if actualPosition.y != 0 {
             scrollToTop()

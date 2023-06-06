@@ -117,7 +117,6 @@ final class InfoVC: UIViewController {
     
     let photo: UnsplashPhoto
     let defaults = UserDefaults.standard
-    private weak var delegate: FavoritesVCProtocol?
     
     // MARK: - Lifecycle
     
@@ -134,20 +133,25 @@ final class InfoVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-      
-        
         view.backgroundColor = .systemBackground
         navigationItem.hidesBackButton = false
-        
-        let image = defaults.bool(forKey: photo.id) ? UIImage(systemName: "heart.fill") : UIImage(systemName: "heart")
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: image, style: .done, target: self, action: #selector(buttonTapped))
-       
-        navigationController?.navigationBar.tintColor = .black
+        navigationController?.navigationBar.tintColor = .label
         activityIndicator.startAnimating()
         print(photo.id)
         configureUI()
         addSubviews()
         makeConstraints()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        let photos = StorageManager.shared.getPhotos()
+        if photos.contains(where: { $0.id == photo.id }) {
+            let image = UIImage(systemName: "heart.fill")
+            navigationItem.rightBarButtonItem = UIBarButtonItem(image: image, style: .done, target: self, action: #selector(buttonTapped))
+        } else {
+            let image = UIImage(systemName: "heart")
+            navigationItem.rightBarButtonItem = UIBarButtonItem(image: image, style: .done, target: self, action: #selector(buttonTapped))
+        }
     }
     
     func configureUI() {
@@ -183,17 +187,15 @@ final class InfoVC: UIViewController {
     
     @objc private func buttonTapped(_ sender: UIBarButtonItem) {
         print(#function)
-//        if defaults.bool(forKey: photo.id) {
-//            sender.image = UIImage(systemName: "heart")
-//            //defaults.removeObject(forKey: photo.id)
-//        } else {
-//            sender.image = UIImage(systemName: "heart.fill")
-//            //defaults.set(true, forKey: photo.id)
-//
-//            defaults.set(nil, forKey: "photos")
-//            // FavoritesVC.photos.append(photo)
-//            //delegate?.updateTableView()
-//        }
+        var photos = StorageManager.shared.getPhotos()
+        if photos.contains(where: { $0.id == photo.id }) {
+            sender.image = UIImage(systemName: "heart")
+            photos.removeAll(where: { $0.id == photo.id })
+            StorageManager.shared.savePhotos(photos)
+            return
+        }
+        sender.image = UIImage(systemName: "heart.fill")
+        StorageManager.shared.savePhoto(photo)
     }
     
     // MARK: - Layout

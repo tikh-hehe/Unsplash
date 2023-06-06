@@ -40,12 +40,12 @@ extension UIViewController {
             switch view {
             case let collectionView as UICollectionView:
                 if collectionView.scrollsToTop {
-                    collectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
+                    collectionView.scrollToItem(at: IndexPath(row: -1, section: 0), at: .top, animated: true)
                     return
                 }
             case let tableView as UITableView:
                 if tableView.scrollsToTop {
-                    tableView.setContentOffset(.zero, animated: true)
+                    tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
                     return
                 }
             default:
