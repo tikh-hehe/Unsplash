@@ -33,7 +33,6 @@ final class FeedPresenter: FeedPresenterProtocol {
     }
     
     func getPhotos() {
-        print(page)
         if page == 0 { page = 1 }
         
         networkManager.getPhotos(page: page) { [weak self] result in
@@ -44,8 +43,7 @@ final class FeedPresenter: FeedPresenterProtocol {
                 self.page += 1
                 self.view?.updateCollection()
                 
-            case .failure(let error):
-                print(error)
+            case .failure:
                 self.view?.showAlert()
             }
         }
@@ -60,14 +58,11 @@ final class FeedPresenter: FeedPresenterProtocol {
             switch result {
             case .success(let photos):
                 self.totalPage = photos.total_pages
-                print(self.totalPage)
                 self.photosFromPage = photos.results
                 self.photos += photos.results
                 self.view?.updateCollection()
                 
-                print(self.photosFromPage.count)
-            case .failure(let error):
-                print(error)
+            case .failure:
                 self.view?.showAlert()
             }
         }

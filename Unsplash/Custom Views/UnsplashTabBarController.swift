@@ -45,6 +45,7 @@ extension UIViewController {
                 }
             case let tableView as UITableView:
                 if tableView.scrollsToTop {
+                    if tableView.numberOfRows(inSection: 0) == 0 { return }
                     tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
                     return
                 }

@@ -7,10 +7,6 @@
 
 import UIKit
 
-//protocol FavoritesVCProtocol: AnyObject {
-//    func updateTableView()
-//}
-
 final class FavoritesVC: UIViewController {
     
     // MARK: - Views
@@ -41,7 +37,6 @@ final class FavoritesVC: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        print(#function)
         photos = StorageManager.shared.getPhotos()
         let backText = UILabel()
         backText.text = "There are no favorites photos here.\n Add something!"

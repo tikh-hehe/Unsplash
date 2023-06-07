@@ -162,7 +162,6 @@ extension FeedVC: UICollectionViewDelegate, UICollectionViewDataSource {
             footerView.startAnimating()
             
         } else if offsetY > contentHeight - height && !text.isEmpty {
-            print(text)
             numberOfPages += 1
             if numberOfPages >= presenter.totalPage { return }
             presenter.searchPhotosByWord(query: text)

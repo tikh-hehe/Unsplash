@@ -122,8 +122,6 @@ final class InfoVC: UIViewController {
     
     init(photo: UnsplashPhoto) {
         self.photo = photo
-        print(photo.urls.full)
-
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -137,7 +135,6 @@ final class InfoVC: UIViewController {
         navigationItem.hidesBackButton = false
         navigationController?.navigationBar.tintColor = .label
         activityIndicator.startAnimating()
-        print(photo.id)
         configureUI()
         addSubviews()
         makeConstraints()
@@ -186,7 +183,6 @@ final class InfoVC: UIViewController {
     }
     
     @objc private func buttonTapped(_ sender: UIBarButtonItem) {
-        print(#function)
         var photos = StorageManager.shared.getPhotos()
         if photos.contains(where: { $0.id == photo.id }) {
             sender.image = UIImage(systemName: "heart")

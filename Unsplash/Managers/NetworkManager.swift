@@ -29,7 +29,6 @@ class NetworkManager: NetworkManagerProtocol {
     
     func getPhotos(page: Int, completion: @escaping (Result<[UnsplashPhoto], NetworkError>) -> Void) {
         let endpoint = baseURL + "photos?per_page=30&page=\(page)&client_id=\(apiKey)"
-        print(endpoint)
         guard let url = URL(string: endpoint) else {
             completion(.failure(.badURL))
             return
@@ -66,12 +65,8 @@ class NetworkManager: NetworkManagerProtocol {
         let endpoint = baseURL + "search/photos?per_page=30&page=\(page)&query=\(query)&client_id=\(apiKey)"
         guard let url = URL(string: endpoint) else {
             completion(.failure(.badURL))
-            print(endpoint)
-            
-
             return
         }
-        print(endpoint)
 
         URLSession.shared.dataTask(with: url) { data, response, error in
             if error != nil {
@@ -80,8 +75,6 @@ class NetworkManager: NetworkManagerProtocol {
             }
             
             if let response = (response as? HTTPURLResponse), response.statusCode != 200 {
-                print(response.statusCode)
-                print(String(data: data!, encoding: .utf8) as Any)
                 completion(.failure(.unhandledResponse))
                 return
             }
@@ -97,14 +90,12 @@ class NetworkManager: NetworkManagerProtocol {
                 completion(.success(response))
             } catch {
                 completion(.failure(.decodingError))
-                print(error)
             }
         }.resume()
     }
     
     func getPhoto(id: String, completion: @escaping (Result<UnsplashPhoto, NetworkError>) -> Void) {
         let endpoint = baseURL + "photos/\(id)?client_id=\(apiKey)"
-        print(endpoint)
         guard let url = URL(string: endpoint) else {
             completion(.failure(.badURL))
             return
