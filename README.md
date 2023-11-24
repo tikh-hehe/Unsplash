@@ -1,5 +1,4 @@
 # Unsplash
-<img src="https://imgtr.ee/images/2023/06/07/pKMix.png" width="192" height="192">
 
 Тестовое задание:
 
